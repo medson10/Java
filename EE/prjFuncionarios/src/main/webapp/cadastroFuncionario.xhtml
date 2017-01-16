@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+</h:head>
+<h:body>
+
+	<h:form id="formFuncionario">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Código" />
+			<p:inputText value="#{funcionarioManagedBean.funcionario.codigo}"
+				required="true" />
+			<p:outputLabel value="Nome" />
+			<p:inputText value="#{funcionarioManagedBean.funcionario.nome}"
+				required="true" />
+			<p:outputLabel for="console" value="Cargo" />
+			<p:selectOneMenu id="console"
+				value="#{funcionarioManagedBean.funcionario.cargo}"
+				style="width:125px" required="true">
+				<f:selectItem itemLabel="Programador Junior"
+					itemValue="Programador Junior" />
+				<f:selectItem itemLabel="Programador Pleno"
+					itemValue="Programador Pleno" />
+				<f:selectItem itemLabel="Programador Senior"
+					itemValue="Programador Senior" />
+			</p:selectOneMenu>
+			<p:outputLabel value="Status" />
+			<p:inputSwitch value="#{funcionarioManagedBean.funcionario.status}"
+				required="true" onLabel="Ativo" offLabel="Inativo" />
+			<p:outputLabel for="fsetor" value="Setor" />
+			<p:selectOneRadio id="fsetor"
+				value="#{funcionarioManagedBean.funcionario.setor}" required="true">
+				<f:selectItem itemLabel="Java" itemValue="Java" />
+				<br />
+				<f:selectItem itemLabel="Python" itemValue="Python" />
+				<br />
+				<f:selectItem itemLabel="Ruby" itemValue="Ruby" />
+			</p:selectOneRadio>
+		</p:panelGrid>
+		<p:commandButton value="Salvar"
+			action="#{funcionarioManagedBean.salvar()}"
+			update=":formFuncionario :formTableFuncionarios:tableFuncionarios" />
+	</h:form>
+	<br />
+	<br />
+	<h:form id="formTableFuncionarios">
+
+		<p:dataTable id="tableFuncionarios" var="func"
+			value="#{funcionarioManagedBean.allFuncionarios}" editable="true"
+			style="margin-bottom:20px" rows="1" paginator="true"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="1,5,10,15">
+			<f:facet name="header">
+           Funcionarios Cadastrados
+       </f:facet>
+			<br />
+			<p:ajax event="rowEdit"
+				listener="#{funcionarioManagedBean.onRowEdit}"
+				update=":formTableFuncionarios:tableFuncionarios" />
+
+			<p:column headerText="Código" filterBy="#{func.codigo}"
+				filterMatchMode="contains">
+				<h:outputText value="#{func.codigo}" />
+>
+			</p:column>
+
+			<p:column headerText="Nome" filterBy="#{func.nome}"
+				filterMatchMode="contains">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{func.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="idFuncNome" value="#{func.nome}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Status" filterBy="#{func.status}"
+				filterMatchMode="contains">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{func.status}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:selectOneMenu value="#{func.status}" style="width:100%">
+							<f:selectItem itemValue="true" itemLabel="Ativo" />
+							<f:selectItem itemValue="false" itemLabel="Inativo" />
+						</h:selectOneMenu>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Cargo" filterBy="#{func.cargo}"
+				filterMatchMode="contains">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{func.cargo}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:selectOneMenu value="#{func.cargo}" style="width:100%">
+							<f:selectItem itemValue="Programador Junior"
+								itemLabel="Programador Junior" />
+							<f:selectItem itemValue="Programador Pleno"
+								itemLabel="Programador Pleno" />
+							<f:selectItem itemValue="Programador Senior"
+								itemLabel="Programador Senior" />
+						</h:selectOneMenu>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Setor" filterBy="#{func.setor}"
+				filterMatchMode="contains">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{func.setor}" />
+					</f:facet>
+					<f:facet name="input">
+						<f:facet name="input">
+							<h:selectOneMenu value="#{func.setor}" style="width:100%">
+								<f:selectItem itemValue="Python" itemLabel="Python" />
+								<f:selectItem itemValue="Java" itemLabel="Java" />
+								<f:selectItem itemValue="Ruby" itemLabel="Ruby" />
+							</h:selectOneMenu>
+						</f:facet>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:32px">
+				<p:rowEditor />
+				<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+					style="text-align:center"
+					actionListener="#{funcionarioManagedBean.remover(func)}"
+					update=":formTableFuncionarios" />
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+
+
+</h:body>
+</html>

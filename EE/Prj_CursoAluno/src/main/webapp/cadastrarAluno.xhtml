@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<meta charset="UTF-8" />
+	
+</h:head>
+
+<h:body>
+
+    <p:link value="Menu" outcome="menu"/>
+	<h:form id="formAlunos">
+
+		<p:panelGrid columns="2">
+			
+			<p:outputLabel value="Nome:" />
+			<p:inputText value="#{alunoManagedBean.aluno.nome}" />
+
+			<p:outputLabel value="Curso:" />
+			<p:selectOneMenu value="#{alunoManagedBean.curso}"
+				converter="converterCurso">
+				<f:selectItem itemValue="" itemLabel="Selecione um curso" />
+				<f:selectItems value="#{alunoManagedBean.cursos}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.descricao}" />
+			</p:selectOneMenu>
+
+			<p:outputLabel value="Faltas:" />
+			<p:inputText value="#{alunoManagedBean.aluno.faltas}" />
+			
+			<p:outputLabel value="Nota 1:" />
+			<p:inputText value="#{alunoManagedBean.aluno.nota1}" />
+			
+			<p:outputLabel value="Nota 2:" />
+			<p:inputText value="#{alunoManagedBean.aluno.nota2}" />
+
+
+		</p:panelGrid>
+		<p:commandButton value="Salvar" action="#{alunoManagedBean.salvar}"
+			update=":formAlunos, :formTableAlunos" />
+	</h:form>
+
+	<h:form id="formTableAlunos">
+	
+		<p:dataTable value="#{alunoManagedBean.listaAlunos}" var="alu"	editable="true" id="tableAlunos" >
+
+            <p:ajax event="rowEdit" listener="#{alunoManagedBean.onRowEdit}" update=":formTableAlunos:tableAlunos" />  
+			
+			<p:column headerText="Registro">
+				<h:outputText value="#{alu.registro}" />
+			</p:column>
+
+			<p:column headerText="Nome">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{alu.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{alu.nome}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+
+			<p:column headerText="Curso">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{alu.curso.descricao}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{alu.curso}"
+							converter="converterCurso" style="width:100%">
+							<f:selectItem itemValue="" itemLabel="Selecione um curso" />
+							<f:selectItems value="#{alunoManagedBean.cursos}"
+								var="aux" itemValue="#{aux}" itemLabel="#{aux.descricao}" />
+						</p:selectOneMenu>
+
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Faltas">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{alu.faltas}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{alu.faltas}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Nota 1">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{alu.nota1}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText  value="#{alu.nota1}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Nota 2">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{alu.nota2}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="modelInput" value="#{alu.nota2}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Média">
+				<h:outputText value="#{alu.calcMedia()}" />
+			</p:column>
+
+			<p:column style="width:70px" headerText="Opções">
+					<p:rowEditor>
+
+					</p:rowEditor>
+					
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{alunoManagedBean.remove(alu)}"
+						update=":formTableAlunos" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</h:body>
+</html>
